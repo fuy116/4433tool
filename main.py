@@ -12,11 +12,6 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 from tkinter import Toplevel, messagebox
 
-from matplotlib.font_manager import fontManager
-
-
-fontManager.addfont('D:\專題\html\py\TaipeiSansTCBeta-Regular.ttf')
-mpl.rc('font', family='Taipei Sans TC Beta')
 
 def gui_inti():
     win = tk.Tk()
@@ -233,9 +228,6 @@ def decide():
     #elif(var_advancecd_select==3):   
          
    # else:
-  
-        
-    
 
 # def check(list_a,list_b):#檢查一個list內是否有完全一樣的兩個數據
     # count = 0
@@ -285,26 +277,6 @@ def s_d(get_list,data,filter_input): #標準差，波動程度。值小波動小
     #先複製一個getlist、算出要前X%、Sort、利用雙for比對(原陣列vs sort後陣列)、把n記錄下來
     #final:printf(data[n][d])       
     
-
-
-def draw(get_list,get_name,get_data):
-    get_data[0] = ['三個月','六個月','一年','二年','三年','五年']
-    chart_color = ['red','blue','green','orange','purple','teal','hotpink','gold','brown','olive'] #存線條顏色用
-    x=0
-    
-   
-    for count in range(len(get_list)):
-        print(count)
-        if (x>10):
-            x==1
-        plt.plot(get_data[0],get_data[x+1],color=chart_color[x], marker=".",label=get_name[x])
-        x+=1
-            
-
-    plt.legend(loc = 'lower left')
-    plt.xticks(get_data[0], rotation='horizontal')
-    plt.show()
-        
 def fftt(_data,_list,filter,data_len,array_index):
 
       data_compare=[]
