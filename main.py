@@ -187,7 +187,7 @@ def run(data):
     
         fftt_result = Toplevel()
         fftt_result.title("4433篩選結果")
-        fftt_result.geometry("300x300")
+        fftt_result.geometry("450x300")
         LabelA = tk.Label(fftt_result,text =''.join(name_list)).pack()
         button_select = tk.Button(fftt_result,text="進階篩選",command=advancecd_select,padx=20,pady=10).pack(side="bottom")
     
@@ -207,18 +207,24 @@ def advancecd_select():
     advancecd_select.title("進階篩選")
     advancecd_select.geometry("400x400")
     
-    global var_advancecd_select
+    global var_advancecd_select,select_sort
     var_advancecd_select  = tk.IntVar()
+    select_sort = tk.IntVar()
     title_advselect = tk.Label(advancecd_select,text='風險指標',font=(15)).grid(row=0,column=0)
+    title_selectvalue = tk.Label(advancecd_select,text='篩選數值',font=(15)).grid(row=1,column=0)
     select_button_0 = tk.Radiobutton(advancecd_select,text='夏普',variable=var_advancecd_select,value=1).grid(row=0,column=1)
     select_button_1 = tk.Radiobutton(advancecd_select,text='標準差',variable=var_advancecd_select,value=2).grid(row=0,column=2)
     select_button_2 = tk.Radiobutton(advancecd_select,text='Beta',variable=var_advancecd_select,value=3).grid(row=0,column=3)
     select_button_3 = tk.Radiobutton(advancecd_select,text='Alpha',variable=var_advancecd_select,value=4).grid(row=0,column=4)
-
-
+    #大到小or小到大
     
-    decide_button = tk.Button(advancecd_select,text="送出",command = decide,padx=40,pady=10)
-    decide_button.pack(side="bottom")
+    title_selectsort=tk.Label(advancecd_select,text='呈現方式',font=(15)).grid(row=2,column=0)
+    select_value_entry = tk.Entry(advancecd_select,width=3).grid(row=1,column=1)
+    select_button_4 = tk.Radiobutton(advancecd_select,text='大到小',variable=select_sort,value=0).grid(row=2,column=1)
+    select_button_5 = tk.Radiobutton(advancecd_select,text='小到大',variable=select_sort,value=1).grid(row=2,column=2)
+    
+    #decide_button = tk.Button(advancecd_select,text='送出',command = decide,padx=40,pady=10).pack(side="bottom")
+
     
 def decide():
     if(var_advancecd_select==1):
