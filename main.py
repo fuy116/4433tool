@@ -1,6 +1,4 @@
 
-#from dataclasses import InitVar
-#from email import message
 from msilib import RadioButtonGroup
 from ssl import get_default_verify_paths
 import tkinter as tk
@@ -12,14 +10,12 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 from tkinter import Toplevel, messagebox
 
-
 def gui_inti():
     win = tk.Tk()
     win.title("基金績效篩選工具")
     win.geometry("645x350")#寬x高
     win.minsize(width=350,height=180) #最小size
     win.maxsize(width=645,height=350)
-  
 
     label=tk.Label(text="請提供資料來源網址")
     label.pack(side="top")
@@ -226,11 +222,11 @@ def advancecd_select():
     #decide_button = tk.Button(advancecd_select,text='送出',command = decide,padx=40,pady=10).pack(side="bottom")
 
     
-def decide():
+def decide(liper_or_morning):
     if(var_advancecd_select==1):
-        sharpe(get_list,data)
+        
     elif(var_advancecd_select==2):
-        s_d(get_list,data,filter_input)
+        
     #elif(var_advancecd_select==3):   
          
    # else:
@@ -245,6 +241,8 @@ def decide():
         # print(count)
         # if(count>=2):
             # return check_true
+def sorting(sort_value,index,select_sort):
+    
     
 def sharpe(get_list,data):
     sharpe_fund =0
