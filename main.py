@@ -1,4 +1,3 @@
-
 from msilib import RadioButtonGroup
 from ssl import get_default_verify_paths
 import tkinter as tk
@@ -69,6 +68,7 @@ def gui_inti():
 def crawler ():
 
     resp = requests.get(entry.get())
+    global select_type
     select_type = var.get()
     data_index_=[]
     data_index_morningstar = [1,4,5,6,7,8,9,10,12,13,14,15]
@@ -127,6 +127,7 @@ def crawler ():
     run(data)
 
 def run(data):
+    global data_len
     data_len = len(data)
 
     num_filter_3 = data_len*0.33
@@ -186,14 +187,15 @@ def run(data):
         fftt_result.geometry("450x300")
         LabelA = tk.Label(fftt_result,text =''.join(name_list)).pack()
         button_select = tk.Button(fftt_result,text="進階篩選",command=advancecd_select,padx=20,pady=10).pack(side="bottom")
-    
+        fftt_result.minsize(width=300,height=300) #最小size
+        fftt_result.maxsize(width=300,height=300)
        #padx=20,pady=10
         
         #select_button_4 = tk.Radiobutton(text='特雷諾',variable=var,value=2)
         if(var_1.get()==1):
             sharpe(get_list,data)
-        if(var_2.get()==1):
-            draw(get_list,get_name,get_data)
+       # if(var_2.get()==1):
+           # draw(get_list,get_name,get_data)
     else:
         tk.messagebox.showerror(title=None, message='無符合資料')
     
@@ -202,12 +204,14 @@ def advancecd_select():
     advancecd_select = Toplevel()
     advancecd_select.title("進階篩選")
     advancecd_select.geometry("400x400")
-    
-    global var_advancecd_select,select_sort
+
+    #https://www.sitca.org.tw/ROC/Industry/IN2412.aspx?txtYEAR=2022&txtMONTH=05&txtGROUPID=BDEUR
+    global var_advancecd_select,select_sort,select_value_entry
     var_advancecd_select  = tk.IntVar()
+  
     select_sort = tk.IntVar()
     title_advselect = tk.Label(advancecd_select,text='風險指標',font=(15)).grid(row=0,column=0)
-    title_selectvalue = tk.Label(advancecd_select,text='篩選數值',font=(15)).grid(row=1,column=0)
+    #title_selectvalue = tk.Label(advancecd_select,text='篩選數值',font=(15)).grid(row=1,column=0)
     select_button_0 = tk.Radiobutton(advancecd_select,text='夏普',variable=var_advancecd_select,value=1).grid(row=0,column=1)
     select_button_1 = tk.Radiobutton(advancecd_select,text='標準差',variable=var_advancecd_select,value=2).grid(row=0,column=2)
     select_button_2 = tk.Radiobutton(advancecd_select,text='Beta',variable=var_advancecd_select,value=3).grid(row=0,column=3)
@@ -215,22 +219,38 @@ def advancecd_select():
     #大到小or小到大
     
     title_selectsort=tk.Label(advancecd_select,text='呈現方式',font=(15)).grid(row=2,column=0)
-    select_value_entry = tk.Entry(advancecd_select,width=3).grid(row=1,column=1)
+   #select_value_entry = tk.Entry(advancecd_select,width=3).grid(row=1,column=1)
     select_button_4 = tk.Radiobutton(advancecd_select,text='大到小',variable=select_sort,value=0).grid(row=2,column=1)
     select_button_5 = tk.Radiobutton(advancecd_select,text='小到大',variable=select_sort,value=1).grid(row=2,column=2)
-    
-    #decide_button = tk.Button(advancecd_select,text='送出',command = decide,padx=40,pady=10).pack(side="bottom")
+
+    decide_button = tk.Button(advancecd_select,text="送出",command = decide).grid(row=5,column=2)
 
     
-def decide(liper_or_morning):
-    if(var_advancecd_select==1):
-        
-    elif(var_advancecd_select==2):
-        
-    #elif(var_advancecd_select==3):   
-         
-   # else:
-
+def decide():
+    print("E============")
+    print(var_advancecd_select)
+    index_choose = 0
+    if(var_advancecd_select==1): #夏普
+        if(select_sort==1):
+            index_choose=13
+        else:
+            index_choose=14
+    elif(var_advancecd_select==2):#年化
+        index_choose=12    
+    elif(var_advancecd_select==3): #阿法
+        if(select_sort==1):
+            index_choose=14
+        else:
+            index_choose=16
+    elif(var_advancecd_select==4): #beta  
+        if(select_sort==1):
+            index_choose=15
+        else:
+            index_choose=13
+    sorting(index_choose)
+    #elif(var_advancecd_select==5):#特雷諾
+        #index_choose= 15
+ 
 # def check(list_a,list_b):#檢查一個list內是否有完全一樣的兩個數據
     # count = 0
     # for x in range(len(list_a)):
@@ -241,7 +261,34 @@ def decide(liper_or_morning):
         # print(count)
         # if(count>=2):
             # return check_true
-def sorting(sort_value,index,select_sort):
+def sorting(index_choose):
+    copy_data =[]
+    result_data=[]
+ 
+    #把數據抓出來
+    i=0
+    for count in range(len(get_list)):
+        copy_data.append(data[get_list[i]][index_choose])
+
+        i+=1
+    #排序
+    if(select_sort==1):
+        sorted_copy_data = sorted(copy_data, reverse = True)
+    else:
+        sorted_copy_data = sorted(copy_data, reverse = False)
+        
+    #交叉比對
+    i=0
+    for count_1 in range(len(copy_data)):
+        x=0
+        for count_2 in range():
+            if float(data[get_list[i]][index_choose]) == sorted_copy_data[x]:
+                result_data.append(sorted_copy_data[x]+'\n')
+            x+=1
+    i+=1
+    #顯示
+    tk.messagebox.showinfo(title='進階篩選結果', message=''.join(result_data))
+       
     
     
 def sharpe(get_list,data):
@@ -286,7 +333,6 @@ def fftt(_data,_list,filter,data_len,array_index):
       data_compare=[]
       #把資料轉成float
       for count in range(data_len):
-        #print(_data[count][array_index])
         data_compare.append(float(_data[count][array_index]))
 
       #進行排序
