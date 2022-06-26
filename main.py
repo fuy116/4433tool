@@ -8,7 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from tkinter import Toplevel, messagebox
-
+import tkinter.ttk as ttk
 def gui_inti():
     win = tk.Tk()
     win.title("基金績效篩選工具")
@@ -37,9 +37,10 @@ def gui_inti():
     label_i_3.place(x=5,y=245)
     #input = tk.StringVar()
     global entry 
-   
+
     entry= tk.Entry(width = 50)
-    entry.place(x=70 ,y=0)
+    entry.place(x=70 ,y=0) 
+    entry.pack()
 
     global var,var_1,var_2
     var = tk.IntVar()
@@ -62,7 +63,7 @@ def gui_inti():
     button = tk.Button(text="送出",command = crawler,padx=40,pady=10)
     button.pack(side="bottom")
 
-    entry.pack()
+    
     win.mainloop()
     
 def crawler ():
@@ -83,11 +84,11 @@ def crawler ():
     soup = BeautifulSoup(resp.text, 'html.parser')
     rows_even = soup.find_all(class_ = "DTeven")
     rows_odd = soup.find_all(class_ = "DTodd")
-    zero = 0
+
     delete_list = []
     #初始化
-    even_data=[['\xa0' for zero in range(12)] for row in range(len(rows_even))]
-    odd_data=[['\xa0' for zero in range(12)] for row in range(len(rows_odd))]
+    even_data=[['\xa0' for count in range(12)] for row in range(len(rows_even))]
+    odd_data=[['\xa0' for count in range(12)] for row in range(len(rows_odd))]
     
     #用來存要讀取的資料index 1名字 4三個月 5六個月 6789:1235年,beta
 
@@ -206,16 +207,17 @@ def advancecd_select():
     advancecd_select.geometry("400x400")
 
     #https://www.sitca.org.tw/ROC/Industry/IN2412.aspx?txtYEAR=2022&txtMONTH=05&txtGROUPID=BDEUR
-    global var_advancecd_select,select_sort,select_value_entry
-    var_advancecd_select  = tk.IntVar()
-  
+    global var_3,select_sort,select_value_entry
+    
+    var_3  = tk.IntVar()
     select_sort = tk.IntVar()
+    
     title_advselect = tk.Label(advancecd_select,text='風險指標',font=(15)).grid(row=0,column=0)
     #title_selectvalue = tk.Label(advancecd_select,text='篩選數值',font=(15)).grid(row=1,column=0)
-    select_button_0 = tk.Radiobutton(advancecd_select,text='夏普',variable=var_advancecd_select,value=1).grid(row=0,column=1)
-    select_button_1 = tk.Radiobutton(advancecd_select,text='標準差',variable=var_advancecd_select,value=2).grid(row=0,column=2)
-    select_button_2 = tk.Radiobutton(advancecd_select,text='Beta',variable=var_advancecd_select,value=3).grid(row=0,column=3)
-    select_button_3 = tk.Radiobutton(advancecd_select,text='Alpha',variable=var_advancecd_select,value=4).grid(row=0,column=4)
+    select_button_0 = tk.Radiobutton(advancecd_select,text='夏普',variable=var_3,value=1).grid(row=0,column=1)
+    select_button_1 = tk.Radiobutton(advancecd_select,text='標準差',variable=var_3,value=2).grid(row=0,column=2)
+    select_button_2 = tk.Radiobutton(advancecd_select,text='Beta',variable=var_3,value=3).grid(row=0,column=3)
+    select_button_3 = tk.Radiobutton(advancecd_select,text='Alpha',variable=var_3,value=0).grid(row=0,column=4)
     #大到小or小到大
     
     title_selectsort=tk.Label(advancecd_select,text='呈現方式',font=(15)).grid(row=2,column=0)
@@ -223,31 +225,34 @@ def advancecd_select():
     select_button_4 = tk.Radiobutton(advancecd_select,text='大到小',variable=select_sort,value=0).grid(row=2,column=1)
     select_button_5 = tk.Radiobutton(advancecd_select,text='小到大',variable=select_sort,value=1).grid(row=2,column=2)
 
-    decide_button = tk.Button(advancecd_select,text="送出",command = decide).grid(row=5,column=2)
+    decide_button = tk.Button(advancecd_select,text="送出",command = decide).grid(row=8,column=2)
+  
 
-    
 def decide():
-    print("E============")
-    print(var_advancecd_select)
-    index_choose = 0
-    if(var_advancecd_select==1): #夏普
-        if(select_sort==1):
-            index_choose=13
+    #data_index_morningstar = [1,4,5,6,7,8,9,10,12,13,14,15] 11
+    #data_index_lipper =      [1,4,5,6,7,8,9,10,12,13,14,16]  
+ 
+    global index_choose
+    index_choose =0
+
+    if(var_3.get()==1): #夏普
+        if(select_sort.get()==1):
+            index_choose=9
         else:
-            index_choose=14
-    elif(var_advancecd_select==2):#年化
-        index_choose=12    
-    elif(var_advancecd_select==3): #阿法
-        if(select_sort==1):
-            index_choose=14
+            index_choose=10
+    elif(var_3.get()==2):#年化
+        index_choose=8    
+    elif(var_3.get()==0): #阿法
+        if(select_sort.get()==1):
+            index_choose=10
         else:
-            index_choose=16
-    elif(var_advancecd_select==4): #beta  
-        if(select_sort==1):
-            index_choose=15
+            index_choose=11
+    elif(var_3.get()==0): #beta  
+        if(select_sort.get()==1):
+            index_choose=11
         else:
-            index_choose=13
-    sorting(index_choose)
+            index_choose=9
+    sorting()
     #elif(var_advancecd_select==5):#特雷諾
         #index_choose= 15
  
@@ -261,32 +266,43 @@ def decide():
         # print(count)
         # if(count>=2):
             # return check_true
-def sorting(index_choose):
+def sorting():
     copy_data =[]
     result_data=[]
+    #tmp = float(index_choose)
  
     #把數據抓出來
     i=0
     for count in range(len(get_list)):
-        copy_data.append(data[get_list[i]][index_choose])
-
+        copy_data.append(float(data[get_list[count]][index_choose]))
         i+=1
+    print(copy_data)
+    
     #排序
-    if(select_sort==1):
+    print(select_sort.get())
+    #revese = true 才是大到小???
+    
+    if(select_sort.get()==0):
         sorted_copy_data = sorted(copy_data, reverse = True)
     else:
         sorted_copy_data = sorted(copy_data, reverse = False)
         
     #交叉比對
-    i=0
-    for count_1 in range(len(copy_data)):
-        x=0
-        for count_2 in range():
-            if float(data[get_list[i]][index_choose]) == sorted_copy_data[x]:
-                result_data.append(sorted_copy_data[x]+'\n')
-            x+=1
-    i+=1
+
+    for count_1 in range(len(get_list)):
+        for count_2 in range(len(get_list)):
+            if ((float(data[get_list[count_2]][index_choose])) == sorted_copy_data[count_1]):
+
+                result_data.append(data[get_list[count_2]][0]+'\n')
+             
+         
+ 
     #顯示
+
+    #print(data[get_list[0]][0])
+    #print(data[get_list[1]][0])
+    #print(sorted_copy_data)
+    #print(result_data)
     tk.messagebox.showinfo(title='進階篩選結果', message=''.join(result_data))
        
     
