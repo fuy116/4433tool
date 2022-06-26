@@ -14,29 +14,22 @@ def gui_inti():
     win = tk.Tk()
     win.title("基金績效篩選工具")
     win.geometry("645x350")#寬x高
-    win.minsize(width=350,height=180) #最小size
+    win.minsize(width=645,height=350) #最小size
     win.maxsize(width=645,height=350)
 
     label=tk.Label(text="請提供資料來源網址")
     label.pack(side="top")
-    label_choose1 = tk.Label(text="請選擇基金網站來源:")
-    label_choose1.place(x=5,y=50)
-    label_choose2=tk.Label(text="是否以夏普值(Sharpe)進行第二階段篩選")
-    label_choose2.place(x=5,y=85)
-    label_choose3 = tk.Label(text="是否顯示圖表:")
-    label_choose3.place(x=5,y=120)   
-    label_i_0 =tk.Label(text="附註：4433法則按以下順序挑選基金")
-    label_i_1 =tk.Label(text="「4」：該基金一年期績效排名在同類型的前四分之一")
+    label_choose1 = tk.Label(text="請選擇基金網站來源:").place(x=5,y=50)
 
-    label_i_2=tk.Label(text="「4」：該基金兩年、三年、五年以及自今年以來績效排名在同類型的前四分之一")
-    label_i_3=tk.Label(text="「3」：該基金六個月期績效排名在同類型的前三分之一\n「3」：該基金三個月期績效排名在同類型的前三分之一\n4433法則是由臺大教授邱顯比、李存修2人設計的。\n主要是用來挑選「中長期」，表現績優的基金。")
-    label_source = tk.Label(text="篩選資料來源：中華民國證券投資信託暨顧問商業同業公會官網，統計資料/境外基金各項資料/其他資訊")
-    label_source.place(x=50,y=260)
-    label_i_0.place(x=5,y=200)
-    label_i_1.place(x=5,y=215)
-    label_i_2.place(x=5,y=230)
-    label_i_3.place(x=5,y=245)
-    #input = tk.StringVar()
+    label_i_0 =tk.Label(text="附註：4433法則按以下順序挑選基金").place(x=5,y=100)
+    label_i_1 =tk.Label(text="「4」：該基金一年期績效排名在同類型的前四分之一").place(x=5,y=120)
+
+    label_i_2=tk.Label(text="「4」：該基金兩年、三年、五年以及自今年以來績效排名在同類型的前四分之一").place(x=5,y=140)
+    label_i_3=tk.Label(text="「3」：該基金六個月期績效排名在同類型的前三分之一").place(x=5,y=160)
+    label_i_4=tk.Label(text="「3」：該基金三個月期績效排名在同類型的前三分之一").place(x=5,y=180)
+    label_i_5=tk.Label(text="4433法則是由臺大教授邱顯比、李存修2人設計的。主要是用來挑選「中長期」，表現績優的基金。").place(x=5,y=200)
+    label_source = tk.Label(text="篩選資料來源：中華民國證券投資信託暨顧問商業同業公會官網，統計資料/境外基金各項資料/其他資訊").place(x=5,y=220)
+    
     global entry 
 
     entry= tk.Entry(width = 50)
@@ -45,26 +38,19 @@ def gui_inti():
 
     global var,var_1,var_2
     var = tk.IntVar()
-    radio1 = tk.Radiobutton(text='晨星',variable=var,value=1)
-    radio2 = tk.Radiobutton(text='理柏',variable=var,value=2)
-    var_1= tk.IntVar()#sharpe
-    radio3 = tk.Radiobutton(text='是',variable=var_1,value=1)
-    radio4 = tk.Radiobutton(text='否',variable=var_1,value=0)
-    var_2= tk.IntVar()#畫圖
-    radio5 = tk.Radiobutton(text='是',variable=var_2,value=1)
-    radio6 = tk.Radiobutton(text='否',variable=var_2,value=0)
-
-    radio1.place(x=120,y=50)
-    radio2.place(x=170,y=50)
-    radio3.place(x=230,y=82)
-    radio4.place(x=270,y=82)
-    radio5.place(x=90,y=118)
-    radio6.place(x=130,y=118)
+    radio1 = tk.Radiobutton(text='晨星',variable=var,value=1).place(x=120,y=50)
+    radio2 = tk.Radiobutton(text='理柏',variable=var,value=2).place(x=170,y=50)
     
-    button = tk.Button(text="送出",command = crawler,padx=40,pady=10)
-    button.pack(side="bottom")
+    #var_1= tk.IntVar()#sharpe
+    #radio3 = tk.Radiobutton(text='是',variable=var_1,value=1).place(x=230,y=82)
+    #radio4 = tk.Radiobutton(text='否',variable=var_1,value=0).place(x=270,y=82)
+    #var_2= tk.IntVar()#畫圖
+    #radio5 = tk.Radiobutton(text='是',variable=var_2,value=1).place(x=90,y=118)
+    #radio6 = tk.Radiobutton(text='否',variable=var_2,value=0).place(x=130,y=118)
 
     
+    button = tk.Button(text="送出",command = crawler,padx=40,pady=10).pack(side="bottom")
+
     win.mainloop()
     
 def crawler ():
@@ -277,7 +263,7 @@ def sorting():
         copy_data.append(float(data[get_list[count]][index_choose]))
         i+=1
     print(copy_data)
-    check(copy_data)
+    #check(copy_data)
     
     #排序
     print(select_sort.get())
