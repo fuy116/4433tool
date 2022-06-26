@@ -1,3 +1,4 @@
+from hmac import compare_digest
 from msilib import RadioButtonGroup
 from ssl import get_default_verify_paths
 import tkinter as tk
@@ -217,7 +218,7 @@ def advancecd_select():
     select_button_0 = tk.Radiobutton(advancecd_select,text='夏普',variable=var_3,value=1).grid(row=0,column=1)
     select_button_1 = tk.Radiobutton(advancecd_select,text='標準差',variable=var_3,value=2).grid(row=0,column=2)
     select_button_2 = tk.Radiobutton(advancecd_select,text='Beta',variable=var_3,value=3).grid(row=0,column=3)
-    select_button_3 = tk.Radiobutton(advancecd_select,text='Alpha',variable=var_3,value=0).grid(row=0,column=4)
+    select_button_3 = tk.Radiobutton(advancecd_select,text='Alpha',variable=var_3,value=4).grid(row=0,column=4)
     #大到小or小到大
     
     title_selectsort=tk.Label(advancecd_select,text='呈現方式',font=(15)).grid(row=2,column=0)
@@ -229,7 +230,7 @@ def advancecd_select():
   
 
 def decide():
-    #data_index_morningstar = [1,4,5,6,7,8,9,10,12,13,14,15] 11
+    #data_index_morningstar = [1,4,5,6,7,8,9,10,12,13,14,15] 
     #data_index_lipper =      [1,4,5,6,7,8,9,10,12,13,14,16]  
  
     global index_choose
@@ -242,41 +243,41 @@ def decide():
             index_choose=10
     elif(var_3.get()==2):#年化
         index_choose=8    
-    elif(var_3.get()==0): #阿法
-        if(select_sort.get()==1):
-            index_choose=10
-        else:
-            index_choose=11
-    elif(var_3.get()==0): #beta  
+    elif(var_3.get()==3): #beta  
         if(select_sort.get()==1):
             index_choose=11
         else:
             index_choose=9
+    elif(var_3.get()==4): #阿法
+        if(select_sort.get()==1):
+            index_choose=10
+        else:
+            index_choose=11
+
     sorting()
     #elif(var_advancecd_select==5):#特雷諾
         #index_choose= 15
- 
-# def check(list_a,list_b):#檢查一個list內是否有完全一樣的兩個數據
-    # count = 0
-    # for x in range(len(list_a)):
-        # count=0
-        # for y in range(len(list_b)):
-            # if(list_a[x]==list_b[y]):
-                # count+=1
-        # print(count)
-        # if(count>=2):
-            # return check_true
+    
+def check(input_list):
+    compare_list=set(input_list)
+    repeat_count = 0
+    if len(compare_list) != len(input_list):
+        repeat_count+=1
+        print("value repeat")
+        
+             
 def sorting():
     copy_data =[]
     result_data=[]
     #tmp = float(index_choose)
- 
+    
     #把數據抓出來
     i=0
     for count in range(len(get_list)):
         copy_data.append(float(data[get_list[count]][index_choose]))
         i+=1
     print(copy_data)
+    check(copy_data)
     
     #排序
     print(select_sort.get())
@@ -289,54 +290,25 @@ def sorting():
         
     #交叉比對
 
+ #   for count_1 in range(len(get_list)):
+    #    for count_2 in range(len(get_list)):
+    #        if ((float(data[get_list[count_2]][index_choose])) == sorted_copy_data[count_1]):
+
+                #result_data.append(data[get_list[count_2]][0]+'\n'+)
+#                result_data.append(data[get_list[count_2]][0]+" "+data[get_list[count_2]][index_choose]+'\n')
+ #               break
+            
     for count_1 in range(len(get_list)):
         for count_2 in range(len(get_list)):
-            if ((float(data[get_list[count_2]][index_choose])) == sorted_copy_data[count_1]):
-
-                result_data.append(data[get_list[count_2]][0]+'\n')
-             
-         
- 
-    #顯示
-
-    #print(data[get_list[0]][0])
-    #print(data[get_list[1]][0])
-    #print(sorted_copy_data)
-    #print(result_data)
+            if ((float(data[get_list[count_1]][index_choose])) == sorted_copy_data[count_2]):
+                result_data.append(data[get_list[count_1]][0]+" "+data[get_list[count_1]][index_choose]+'\n')
+                break
+            
+            
+            
+                 
     tk.messagebox.showinfo(title='進階篩選結果', message=''.join(result_data))
-       
-    
-    
-def sharpe(get_list,data):
-    sharpe_fund =0
-    n=0
-    best_n=0
-    for count in range(len(get_list)):
-        if(float(data[get_list[count]][8])>sharpe_fund):
-            sharpe_fund=float(data[get_list[n]][8])
-            best_n=n
-    n+=1
-    tk.messagebox.showinfo(title='夏普值篩選',message=data[best_n][0])
-     
-def s_d(get_list,data,filter_input): #標準差，波動程度。值小波動小，風險小。
-    sd_fund = [] 
-    get_sdfund=[]
-    high_to_low = True
-    copy_get_data = []
-    filter = len(get_list) * round(filter_input)
-    for count in range(get_list):
-        copy_get_data.append(float(data[count][12]))
-    
-    copy_get_data = sorted(copy_get_data, reverse = high_to_low)
-    for i in range(filter):
-        sd_fund.append()
-    
-    for x in range(len(get_list)):
-        for y in range(len(sd_fund)):
-            if(data[get_list[x]][12]==sd_fund[y]):
-                get_sdfund.append(get_list[x])
-    tk.messagebox.showinfo(title='年度標準差篩選',message=data[get_sdfund][0])        
-    print(data[get_sdfund][12])#result
+
      #算出前X%是多少
     
     #Q:利用for比對陣列改良方法? A???
