@@ -1,4 +1,5 @@
-from hmac import compare_digest
+import tkinter
+import customtkinter
 from msilib import RadioButtonGroup
 from ssl import get_default_verify_paths
 import tkinter as tk
@@ -6,66 +7,87 @@ from typing import Counter
 import requests
 from bs4 import BeautifulSoup
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib as mpl
 from tkinter import Toplevel, messagebox
 import tkinter.ttk as ttk
+
+customtkinter.set_appearance_mode("dark")  # Modes: "System" (standard), "Dark", "Light"
+customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
+
+app = customtkinter.CTk()
+app.geometry("360x630")
+app.title("基金績效篩選工具")
+    
 def gui_inti():
-    win = tk.Tk()
-    win.title("基金績效篩選工具")
-    win.geometry("645x350")#寬x高
-    win.minsize(width=645,height=350) #最小size
-    win.maxsize(width=645,height=350)
+    frame_1 = customtkinter.CTkFrame(master=app)
+    frame_1.pack(pady=20, padx=60, fill="both", expand=True)
 
-    label=tk.Label(text="請提供資料來源網址")
-    label.pack(side="top")
-    label_choose1 = tk.Label(text="請選擇基金網站來源:").place(x=5,y=50)
-
-    label_i_0 =tk.Label(text="附註：4433法則按以下順序挑選基金").place(x=5,y=100)
-    label_i_1 =tk.Label(text="「4」：該基金一年期績效排名在同類型的前四分之一").place(x=5,y=120)
-
-    label_i_2=tk.Label(text="「4」：該基金兩年、三年、五年以及自今年以來績效排名在同類型的前四分之一").place(x=5,y=140)
-    label_i_3=tk.Label(text="「3」：該基金六個月期績效排名在同類型的前三分之一").place(x=5,y=160)
-    label_i_4=tk.Label(text="「3」：該基金三個月期績效排名在同類型的前三分之一").place(x=5,y=180)
-    label_i_5=tk.Label(text="4433法則是由臺大教授邱顯比、李存修2人設計的。主要是用來挑選「中長期」，表現績優的基金。").place(x=5,y=200)
-    label_source = tk.Label(text="篩選資料來源：中華民國證券投資信託暨顧問商業同業公會官網，統計資料/境外基金各項資料/其他資訊").place(x=5,y=220)
+    frame_2 = customtkinter.CTkFrame(master=app)
+    frame_2.pack(pady=20, padx=60, fill="both", expand=True)
     
-    global entry 
-
-    entry= tk.Entry(width = 50)
-    entry.place(x=70 ,y=0) 
-    entry.pack()
-
-    global var,var_1,var_2
-    var = tk.IntVar()
-    radio1 = tk.Radiobutton(text='晨星',variable=var,value=1).place(x=120,y=50)
-    radio2 = tk.Radiobutton(text='理柏',variable=var,value=2).place(x=170,y=50)
     
-    #var_1= tk.IntVar()#sharpe
-    #radio3 = tk.Radiobutton(text='是',variable=var_1,value=1).place(x=230,y=82)
-    #radio4 = tk.Radiobutton(text='否',variable=var_1,value=0).place(x=270,y=82)
-    #var_2= tk.IntVar()#畫圖
-    #radio5 = tk.Radiobutton(text='是',variable=var_2,value=1).place(x=90,y=118)
-    #radio6 = tk.Radiobutton(text='否',variable=var_2,value=0).place(x=130,y=118)
-
     
-    button = tk.Button(text="送出",command = crawler,padx=40,pady=10).pack(side="bottom")
+    label_1 = customtkinter.CTkLabel(text="初步篩選     4433法則",master=frame_1, justify=tkinter.LEFT).pack(pady=12, padx=10)
+    global url_entry
+    url_entry = customtkinter.CTkEntry(master=frame_1, placeholder_text="請提供資料來源網址")
+    url_entry.pack(pady=12, padx=10)
 
-    win.mainloop()
+    global optionmenu_1 
+    optionmenu_1 = customtkinter.CTkOptionMenu(frame_1, values=["理柏", "晨星"])
+    optionmenu_1.pack(pady=12, padx=10)
+    optionmenu_1.set("選擇資料來源")
+    
+    button_instruction = customtkinter.CTkButton(
+    master= frame_1,
+    command= fftt_instruction,
+    text= "什麼是4433法則?",
+    border_color= "#9e4a43", 
+    fg_color= "#c75d55").pack(pady=12, padx=10)
+    
+    button_instruction_2 = customtkinter.CTkButton(
+    master= frame_1,
+    command= fftt_instruction,
+    text= "操作說明",
+    border_color= "#9e4a43", 
+    fg_color= "#c75d55").pack(pady=12, padx=10)
+    
+    button_1 = customtkinter.CTkButton(text="送出",master=frame_1, command=crawler)
+    button_1.pack(pady=12, padx=10)
+ 
+    label_2 = customtkinter.CTkLabel(text="進階篩選     風險指標",master=frame_2).pack(pady=12, padx=10)
+    global optionmenu_3,select_sort
+    optionmenu_3 = customtkinter.CTkOptionMenu(master=frame_2, values=["夏普", "標準差","Beta","Alpha"])
+    optionmenu_3.set("選擇風險指標")
+    optionmenu_3.pack(pady=12, padx=10)
+    optionmenu_2 = customtkinter.CTkOptionMenu(master=frame_2, values=["大到小", "小到大"])
+    optionmenu_2.set("風險指標呈現方式")
+    optionmenu_2.pack(pady=12, padx=10)
+    if(optionmenu_2.get()=='大到小'):
+        select_sort=1
+    else:
+        select_sort=0
+    
+
+    app.mainloop()
+    
+
+def fftt_instruction():
+    print("我還不想寫")
     
 def crawler ():
 
-    resp = requests.get(entry.get())
+    resp = requests.get(url_entry.get())
     global select_type
-    select_type = var.get()
+
     data_index_=[]
     data_index_morningstar = [1,4,5,6,7,8,9,10,12,13,14,15]
     data_index_lipper = [1,4,5,6,7,8,9,10,12,13,14,16]
         
-    if select_type == 1:
+    if optionmenu_1.get() == "晨星":
         data_index = data_index_morningstar
+        select_type =1
     else:
         data_index = data_index_lipper
+        select_type =0
 
     
     soup = BeautifulSoup(resp.text, 'html.parser')
@@ -108,7 +130,6 @@ def crawler ():
         i+=1
 
     odd_data = np.delete(odd_data,delete_list, axis = 0)
-
     #合併資料
     global data
     data = np.vstack((even_data,odd_data)) 
@@ -122,7 +143,6 @@ def run(data):
     num_filter_4 = data_len*0.25
 
     #宣告每個項目之入圍清單
-  
     
     m3_list = [0 for one in range(data_len)] 
     m6_list = [0 for one in range(data_len)]
@@ -141,7 +161,6 @@ def run(data):
     fftt(data,y5_list,num_filter_4,data_len,6)
     fftt(data,sty_list,num_filter_4,data_len,7)
 
-
     n=0
     global get_list
     get_list=[]
@@ -150,6 +169,7 @@ def run(data):
     #畫圖用
     get_data=[[]]
     get_name=[]
+    global name_list
     name_list=[]
     for k in range(data_len):
         if m3_list[n]==1 and m6_list[n]==1 and y1_list[n]==1 and y2_list[n]==1 and y3_list[n]==1 and y5_list[n]==1 and sty_list[n]==1:
@@ -169,73 +189,47 @@ def run(data):
         n+=1
 
     if(space!=0):
-    
-        fftt_result = Toplevel()
-        fftt_result.title("4433篩選結果")
-        fftt_result.geometry("450x300")
-        LabelA = tk.Label(fftt_result,text =''.join(name_list)).pack()
-        button_select = tk.Button(fftt_result,text="進階篩選",command=advancecd_select,padx=20,pady=10).pack(side="bottom")
-        fftt_result.minsize(width=300,height=300) #最小size
-        fftt_result.maxsize(width=300,height=300)
-       #padx=20,pady=10
-        
-        #select_button_4 = tk.Radiobutton(text='特雷諾',variable=var,value=2)
-        if(var_1.get()==1):
-            sharpe(get_list,data)
-       # if(var_2.get()==1):
-           # draw(get_list,get_name,get_data)
+        fftt_result_toplevel()  
     else:
         tk.messagebox.showerror(title=None, message='無符合資料')
-    
+def fftt_result_toplevel():
+        window = customtkinter.CTkToplevel()
+        window.title("4433篩選結果")
+        window.geometry("400x460")
+        label_2 = customtkinter.CTkLabel(window, text ="以下基金為4433法則後篩選後之結果")
+        label_1 = customtkinter.CTkLabel(window, text =''.join(name_list))
+        label_1.pack(side="top", fill="both", expand=True, padx=40, pady=40)
+        button = customtkinter.CTkButton(text="進階篩選",master=window, command=decide).pack()
 
-def advancecd_select():  
-    advancecd_select = Toplevel()
-    advancecd_select.title("進階篩選")
-    advancecd_select.geometry("400x400")
-
-    #https://www.sitca.org.tw/ROC/Industry/IN2412.aspx?txtYEAR=2022&txtMONTH=05&txtGROUPID=BDEUR
-    global var_3,select_sort,select_value_entry
-    
-    var_3  = tk.IntVar()
-    select_sort = tk.IntVar()
-    
-    title_advselect = tk.Label(advancecd_select,text='風險指標',font=(15)).grid(row=0,column=0)
-    #title_selectvalue = tk.Label(advancecd_select,text='篩選數值',font=(15)).grid(row=1,column=0)
-    select_button_0 = tk.Radiobutton(advancecd_select,text='夏普',variable=var_3,value=1).grid(row=0,column=1)
-    select_button_1 = tk.Radiobutton(advancecd_select,text='標準差',variable=var_3,value=2).grid(row=0,column=2)
-    select_button_2 = tk.Radiobutton(advancecd_select,text='Beta',variable=var_3,value=3).grid(row=0,column=3)
-    select_button_3 = tk.Radiobutton(advancecd_select,text='Alpha',variable=var_3,value=4).grid(row=0,column=4)
-    #大到小or小到大
-    
-    title_selectsort=tk.Label(advancecd_select,text='呈現方式',font=(15)).grid(row=2,column=0)
-   #select_value_entry = tk.Entry(advancecd_select,width=3).grid(row=1,column=1)
-    select_button_4 = tk.Radiobutton(advancecd_select,text='大到小',variable=select_sort,value=0).grid(row=2,column=1)
-    select_button_5 = tk.Radiobutton(advancecd_select,text='小到大',variable=select_sort,value=1).grid(row=2,column=2)
-
-    decide_button = tk.Button(advancecd_select,text="送出",command = decide).grid(row=8,column=2)
+def final_result(result_data):
+        window = customtkinter.CTkToplevel()
+        window.title("進階篩選結果")
+        window.geometry("400x460")
+        label_1 = customtkinter.CTkLabel(window, text =''.join(result_data))
+        label_1.pack(side="top", fill="both", expand=True, padx=40, pady=40)
   
-
+    
+    
+    
 def decide():
-    #data_index_morningstar = [1,4,5,6,7,8,9,10,12,13,14,15] 
-    #data_index_lipper =      [1,4,5,6,7,8,9,10,12,13,14,16]  
- 
+    
     global index_choose
     index_choose =0
 
-    if(var_3.get()==1): #夏普
-        if(select_sort.get()==1):
+    if(optionmenu_3.get()=="夏普"): #夏普
+        if(select_sort==1):
             index_choose=9
         else:
             index_choose=10
-    elif(var_3.get()==2):#年化
+    elif(optionmenu_3.get()=="標準差"):#年化
         index_choose=8    
-    elif(var_3.get()==3): #beta  
-        if(select_sort.get()==1):
+    elif(optionmenu_3.get()=="Beta"): #beta  
+        if(select_sort==1):
             index_choose=11
         else:
             index_choose=9
-    elif(var_3.get()==4): #阿法
-        if(select_sort.get()==1):
+    elif(optionmenu_3.get()=="Alpha"):#阿法
+        if(select_sort==1):
             index_choose=10
         else:
             index_choose=11
@@ -263,44 +257,25 @@ def sorting():
         copy_data.append(float(data[get_list[count]][index_choose]))
         i+=1
     print(copy_data)
-    #check(copy_data)
+
     
     #排序
-    print(select_sort.get())
-    #revese = true 才是大到小???
+    print(select_sort)
+    #revese = true 才是大到小
     
-    if(select_sort.get()==0):
+    if(select_sort==0):
         sorted_copy_data = sorted(copy_data, reverse = True)
     else:
         sorted_copy_data = sorted(copy_data, reverse = False)
-        
-    #交叉比對
-
- #   for count_1 in range(len(get_list)):
-    #    for count_2 in range(len(get_list)):
-    #        if ((float(data[get_list[count_2]][index_choose])) == sorted_copy_data[count_1]):
-
-                #result_data.append(data[get_list[count_2]][0]+'\n'+)
-#                result_data.append(data[get_list[count_2]][0]+" "+data[get_list[count_2]][index_choose]+'\n')
- #               break
             
     for count_1 in range(len(get_list)):
         for count_2 in range(len(get_list)):
             if ((float(data[get_list[count_1]][index_choose])) == sorted_copy_data[count_2]):
                 result_data.append(data[get_list[count_1]][0]+" "+data[get_list[count_1]][index_choose]+'\n')
                 break
-            
-            
-            
-                 
-    tk.messagebox.showinfo(title='進階篩選結果', message=''.join(result_data))
-
-     #算出前X%是多少
-    
-    #Q:利用for比對陣列改良方法? A???
-    
-    #先複製一個getlist、算出要前X%、Sort、利用雙for比對(原陣列vs sort後陣列)、把n記錄下來
-    #final:printf(data[n][d])       
+    final_result(result_data)
+    #tk.messagebox.showinfo(title='進階篩選結果', message=''.join(result_data))  
+    #result = customtkinter.CTkLabel(text=''.join(result_data),master=advancecd_select).pack(pady=12, padx=10)
     
 def fftt(_data,_list,filter,data_len,array_index):
 
@@ -320,6 +295,7 @@ def fftt(_data,_list,filter,data_len,array_index):
           #已知bug，若數據有兩組一模一樣，會造成誤差。
           if float(_data[num][array_index]) == data_sorted[x]: 
             _list[num] = 1
-            
+
+
 if __name__ =='__main__':
     gui_inti()
