@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 import numpy as np
 from tkinter import Toplevel, messagebox
 import tkinter.ttk as ttk
+import webbrowser
 
 customtkinter.set_appearance_mode("dark")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -24,10 +25,17 @@ def gui_inti():
     frame_2 = customtkinter.CTkFrame(master=app)
     frame_2.pack(pady=20, padx=60, fill="both", expand=True)
     
-    
-    
     label_1 = customtkinter.CTkLabel(text="初步篩選     4433法則",master=frame_1, justify=tkinter.LEFT).pack(pady=12, padx=10)
-    global url_entry
+    global url_entry,url,new
+    url= "https://www.sitca.org.tw/ROC/Industry/IN3200.aspx?PGMID=IN0302"
+    new = 1
+    button_instruction_3 = customtkinter.CTkButton(
+    master= frame_1,
+    command= openweb,
+    text= "基金績效評比網站",
+    border_color= "#608a4d", 
+    hover_color= "#81b867",
+    fg_color= "#79ae61").pack(pady=12, padx=10)
     url_entry = customtkinter.CTkEntry(master=frame_1, placeholder_text="請提供資料來源網址")
     url_entry.pack(pady=12, padx=10)
 
@@ -41,6 +49,7 @@ def gui_inti():
     command= fftt_instruction,
     text= "什麼是4433法則?",
     border_color= "#9e4a43", 
+    hover_color= "#e06a61",
     fg_color= "#c75d55").pack(pady=12, padx=10)
     
     button_instruction_2 = customtkinter.CTkButton(
@@ -48,7 +57,11 @@ def gui_inti():
     command= fftt_instruction,
     text= "操作說明",
     border_color= "#9e4a43", 
+    hover_color= "#e06a61",
     fg_color= "#c75d55").pack(pady=12, padx=10)
+
+    
+
     
     button_1 = customtkinter.CTkButton(text="送出",master=frame_1, command=crawler)
     button_1.pack(pady=12, padx=10)
@@ -69,7 +82,8 @@ def gui_inti():
 
     app.mainloop()
     
-
+def openweb():
+        webbrowser.open(url,new=new)  
 def fftt_instruction():
     print("我還不想寫")
     
@@ -187,7 +201,6 @@ def run(data):
             name_list.append(data[n][0]+'\n')
  
         n+=1
-
     if(space!=0):
         fftt_result_toplevel()  
     else:
@@ -195,7 +208,7 @@ def run(data):
 def fftt_result_toplevel():
         window = customtkinter.CTkToplevel()
         window.title("4433篩選結果")
-        window.geometry("400x460")
+        window.geometry("530x400")
         label_2 = customtkinter.CTkLabel(window, text ="以下基金為4433法則後篩選後之結果")
         label_1 = customtkinter.CTkLabel(window, text =''.join(name_list))
         label_1.pack(side="top", fill="both", expand=True, padx=40, pady=40)
@@ -204,7 +217,7 @@ def fftt_result_toplevel():
 def final_result(result_data):
         window = customtkinter.CTkToplevel()
         window.title("進階篩選結果")
-        window.geometry("400x460")
+        window.geometry("530x400")
         label_1 = customtkinter.CTkLabel(window, text =''.join(result_data))
         label_1.pack(side="top", fill="both", expand=True, padx=40, pady=40)
   
