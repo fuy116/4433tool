@@ -85,6 +85,10 @@ def openweb():
 def fftt_instruction():
     print("我還不想寫")
     
+    
+global get_list   
+get_list = []
+
 def crawler ():
 
     resp = requests.get(url_entry.get())
@@ -174,8 +178,8 @@ def run(data):
     fftt(data,sty_list,num_filter_4,data_len,7)
 
     n=0
-    global get_list
-    get_list=[]
+    
+    
 
     space = 0
     #畫圖用
@@ -220,7 +224,6 @@ def final_result(result_data):
         label_1.pack(side="top", fill="both", expand=True, padx=40, pady=40)  
     
 def decide():
-    
     global index_choose
     index_choose =0
 
@@ -257,12 +260,15 @@ def check(input_list):
 def sorting():
     copy_data =[]
     result_data=[]
-    #tmp = float(index_choose)
+    copy_getlist = get_list 
+
     
     #把數據抓出來
+
     i=0
     for count in range(len(get_list)):
         copy_data.append(float(data[get_list[count]][index_choose]))
+        print(float(data[get_list[count]][index_choose]))
         i+=1
     #print("=====================================")
     #print(copy_data)
@@ -277,13 +283,25 @@ def sorting():
     else:
         sorted_copy_data = sorted(copy_data, reverse = False)
     print(sorted_copy_data)
+    print(copy_data)
+    #if(len(sorted_copy_data)==0):
+        
     #=====================bug區=========================
-    for count_1 in range(len(get_list)):
-        for count_2 in range(len(get_list)):
-            if ((float(data[get_list[count_1]][index_choose])) == sorted_copy_data[count_2]):
-                result_data.append(data[get_list[count_1]][0]+" "+data[get_list[count_1]][index_choose]+'\n')
+    for count_1 in range(len(copy_getlist)):
+        for count_2 in range(len(copy_getlist)):
+            if (sorted_copy_data[count_1] == (float(data[copy_getlist[count_2]][index_choose]))):
+                result_data.append(data[get_list[count_2]][0]+" "+data[get_list[count_2]][index_choose]+'\n')
+                copy_getlist.remove(copy_getlist[count_2])
                 break
+        if(len(sorted_copy_data)==0):
+            break
+        
+
+   # https://www.sitca.org.tw/ROC/Industry/IN2412.aspx?txtYEAR=2022&txtMONTH=05&txtGROUPID=EQEMGBL
+       
+    #copy_getlist = get_list
     final_result(result_data)
+    
     
     #=====================bug區=========================
     #print(result_data)
