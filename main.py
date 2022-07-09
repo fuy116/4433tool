@@ -67,17 +67,15 @@ def gui_inti():
     button_1.pack(pady=12, padx=10)
  
     label_2 = customtkinter.CTkLabel(text="進階篩選     風險指標",master=frame_2).pack(pady=12, padx=10)
-    global optionmenu_3,select_sort
+    global optionmenu_3,optionmenu_2,select_sort
     optionmenu_3 = customtkinter.CTkOptionMenu(master=frame_2, values=["夏普", "標準差","Beta","Alpha"])
     optionmenu_3.set("選擇風險指標")
     optionmenu_3.pack(pady=12, padx=10)
     optionmenu_2 = customtkinter.CTkOptionMenu(master=frame_2, values=["大到小", "小到大"])
     optionmenu_2.set("風險指標呈現方式")
     optionmenu_2.pack(pady=12, padx=10)
-    if(optionmenu_2.get()=='大到小'):
-        select_sort=1
-    else:
-        select_sort=0
+        
+
     
 
     app.mainloop()
@@ -219,10 +217,7 @@ def final_result(result_data):
         window.title("進階篩選結果")
         window.geometry("530x400")
         label_1 = customtkinter.CTkLabel(window, text =''.join(result_data))
-        label_1.pack(side="top", fill="both", expand=True, padx=40, pady=40)
-  
-    
-    
+        label_1.pack(side="top", fill="both", expand=True, padx=40, pady=40)  
     
 def decide():
     
@@ -230,19 +225,19 @@ def decide():
     index_choose =0
 
     if(optionmenu_3.get()=="夏普"): #夏普
-        if(select_sort==1):
+        if(select_type==1):
             index_choose=9
         else:
             index_choose=10
     elif(optionmenu_3.get()=="標準差"):#年化
         index_choose=8    
     elif(optionmenu_3.get()=="Beta"): #beta  
-        if(select_sort==1):
+        if(select_type==1):
             index_choose=11
         else:
             index_choose=9
     elif(optionmenu_3.get()=="Alpha"):#阿法
-        if(select_sort==1):
+        if(select_type==1):
             index_choose=10
         else:
             index_choose=11
@@ -269,24 +264,29 @@ def sorting():
     for count in range(len(get_list)):
         copy_data.append(float(data[get_list[count]][index_choose]))
         i+=1
-    print(copy_data)
+    #print("=====================================")
+    #print(copy_data)
 
-    
+    #print("=====================================")
     #排序
-    print(select_sort)
+   
     #revese = true 才是大到小
-    
-    if(select_sort==0):
+    print(optionmenu_2.get())
+    if(optionmenu_2.get()=="大到小"):
         sorted_copy_data = sorted(copy_data, reverse = True)
     else:
         sorted_copy_data = sorted(copy_data, reverse = False)
-            
+    print(sorted_copy_data)
+    #=====================bug區=========================
     for count_1 in range(len(get_list)):
         for count_2 in range(len(get_list)):
             if ((float(data[get_list[count_1]][index_choose])) == sorted_copy_data[count_2]):
                 result_data.append(data[get_list[count_1]][0]+" "+data[get_list[count_1]][index_choose]+'\n')
                 break
     final_result(result_data)
+    
+    #=====================bug區=========================
+    #print(result_data)
     #tk.messagebox.showinfo(title='進階篩選結果', message=''.join(result_data))  
     #result = customtkinter.CTkLabel(text=''.join(result_data),master=advancecd_select).pack(pady=12, padx=10)
     
